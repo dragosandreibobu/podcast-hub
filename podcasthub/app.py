@@ -14,6 +14,7 @@ from uuid import uuid4
 import httpx
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
+from podcasthub.ui import demo_page
 
 CONTEXT = "https://www.w3.org/ns/activitystreams"
 HOST = os.getenv("PODCAST_HUB_HOST", "127.0.0.1")
@@ -87,11 +88,16 @@ def home():
 a{{color:#075985}}code,pre{{background:#e2e8f0;padding:.4rem;border-radius:5px}}
 li{{margin:.6rem 0}}</style>
 <h1>{escape(NAME)}</h1><p>Independent ActivityPub podcast server: <code>{escape(ACTOR)}</code></p>
-<p><a href="/docs">Interactive API</a> · <a href="/events">Protocol events (JSON)</a> ·
+<p><a href="/demo">Interactive demo</a> · <a href="/docs">API</a> · <a href="/events">Protocol events (JSON)</a> ·
 <a href="/actors/podcast/outbox">Outbox</a> · <a href="/actors/podcast/inbox">Inbox</a></p>
 <h2>Published episodes</h2><ul>{posts or '<li>No episodes yet</li>'}</ul>
 <p>Followers: {len(FOLLOWERS)} · Following: {len(FOLLOWING)} · Received activities: {len(INBOX)}</p>
 </html>"""
+
+
+@app.get("/demo", response_class=HTMLResponse)
+def demo():
+    return demo_page(NAME, BASE)
 
 
 @app.get("/actors/podcast")
